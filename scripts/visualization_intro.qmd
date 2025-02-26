@@ -1,0 +1,79 @@
+---
+title: "visualization_intro"
+format: html
+editor: visual
+---
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(janitor)
+
+```
+```{r}
+escape_raw <- read_csv("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3Af119a05b-bbe7-4aea-93c6-85434dcb1c5e")
+```
+```{r}
+escape <- escape_raw %>% janitor::clean_names()
+```
+```{r}
+annual_esc <- escape %>% #pipe symbol
+  filter(species %in% c("Chinook","Sockeye","Chum","Coho","Pink")) %>%  # check if sth is member of a set
+  mutate(year = lubridate::year(sample_date)) %>% # pull year out of the date column
+  group_by(species,sasap_region,year) %>% 
+  summarize(escapement = sum(daily_count))
+```
+
+```{r}
+ggplot(data = annual_esc, aes(x = species, y = escapement)) + # default, is going to be used by any layer below... 
+  geom_col()  # geom are different types of plots, col is a column plot
+# gg - grammar of graphics 
+
+```
+
+
+```{r}
+annual_esc %>% 
+  filter(species == "Sockeye",
+         sasap_region == "Bristol Bay") %>% 
+  ggplot(aes(x = year, y = escapement)) + 
+  geom_line() + 
+  geom_point()
+```
+
+
+```{r}
+annual_esc %>% 
+  filter(year == 1974, 
+         species %in% c("Chum","Pink")) %>% 
+  ggplot(aes(x=species,y=escapement)) +
+  geom_boxplot() # geom_violin
+```
+
+```{r}
+ggplot(annual_esc,aes(x=species, y = escapement, fill = sasap_region))+
+  geom_col()
+
+```
+```{r}
+annual_esc_2000s <- annual_esc %>% 
+  filter(year %in% 2000:2016)
+```
+```{r}
+ggplot(annual_esc_2000s,aes(x=year,y=escapement,color = species))+
+  geom_line()+
+  geom_point()+
+  #scale_y_continuous("Escapement", label = comma) +
+  facet_wrap(~ sasap_region, scales = "free_y")+ # represent as indipendend subplots 
+labs(title = "Ann esc by region", x = "Year")+
+theme(legend.position = "bottom")
+
+
+```
+
+
+
+
+

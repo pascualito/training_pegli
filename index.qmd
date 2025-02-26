@@ -8,6 +8,7 @@ format: html
 - [Intro to Quarto](scripts/intro-quarto.html)
 - Intro to GitHub
 - Cleaning & wrangling data
+- [Visualization of data](scripts/visualization_intro.html)
 
 ## Practice sessions
 - Practise 1
