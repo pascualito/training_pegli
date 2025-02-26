@@ -12,12 +12,15 @@ library(ggplot2)
 library(janitor)
 
 ```
+
 ```{r}
 escape_raw <- read_csv("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3Af119a05b-bbe7-4aea-93c6-85434dcb1c5e")
 ```
+
 ```{r}
 escape <- escape_raw %>% janitor::clean_names()
 ```
+
 ```{r}
 annual_esc <- escape %>% #pipe symbol
   filter(species %in% c("Chinook","Sockeye","Chum","Coho","Pink")) %>%  # check if sth is member of a set
@@ -33,7 +36,6 @@ ggplot(data = annual_esc, aes(x = species, y = escapement)) + # default, is goin
 
 ```
 
-
 ```{r}
 annual_esc %>% 
   filter(species == "Sockeye",
@@ -42,7 +44,6 @@ annual_esc %>%
   geom_line() + 
   geom_point()
 ```
-
 
 ```{r}
 annual_esc %>% 
@@ -57,10 +58,12 @@ ggplot(annual_esc,aes(x=species, y = escapement, fill = sasap_region))+
   geom_col()
 
 ```
+
 ```{r}
 annual_esc_2000s <- annual_esc %>% 
   filter(year %in% 2000:2016)
 ```
+
 ```{r}
 ggplot(annual_esc_2000s,aes(x=year,y=escapement,color = species))+
   geom_line()+
@@ -72,6 +75,76 @@ theme(legend.position = "bottom")
 
 
 ```
+
+## Interactive Viz
+
+## DT
+
+```{r}
+library(DT)
+```
+```{r}
+locations <- escape %>% 
+  distinct(location,latitude,longitude) %>% 
+  drop_na()
+locations
+```
+```{r}
+datatable(locations)
+```
+
+
+
+
+## Leaflet (external java script library)
+
+```{r}
+library(leaflet)
+```
+
+```{r}
+leaflet(locations) %>% # pipe operator
+  
+  addTiles() %>% 
+  addMarkers(
+    lng = ~ longitude, 
+    lat = ~ latitude,
+    popup = ~ location
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
