@@ -1,6 +1,15 @@
 ---
-title: "index"
+title: "Wonderful course"
 format: html
 ---
 
-Hello world
+## Course lessons
+
+- [Intro to Quarto](scripts/intro-quarto.html)
+- Intro to GitHub
+- Cleaning & wrangling data
+
+## Practice sessions
+- Practise 1
+- Practise 2
+
